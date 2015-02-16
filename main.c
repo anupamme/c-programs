@@ -204,13 +204,13 @@ int main(int argc, char **argv){
 	// step2: build wordcloud 
 	attributeCloud = buildAttributeCloud(modelData);
 	// step 3 call individual threads.
- 	pool[0] = threadpool_create(THREAD, SIZE, 0);
+/* 	pool[0] = threadpool_create(THREAD, SIZE, 0);
  	assert(pool[0] != NULL);
 	for (i = 0; i < QUEUES; i++){
  		pool[i] = threadpool_create(THREAD, SIZE, 0);
  		assert(pool[i] != NULL);
  	}
-	list = getListOfFiles(cwd, dir);
+*/	list = getListOfFiles(cwd, dir);
 	globalCount = 0;
 	for (i = 0; i < list->count; i++){
 		tmpChar = list->listOfFiles[i];
@@ -229,7 +229,8 @@ int main(int argc, char **argv){
 			strcpy(data->text, line);
            		//printf("line after text: %s :\n\n", data->text);
 			sprintf(data->name, "%d", globalCount++);
-			assert(threadpool_add(pool[0], &processText, data, 0) == 0);
+			processText(data);
+//			assert(threadpool_add(pool[0], &processText, data, 0) == 0);
        		}
 	}
 	usleep(20000);
