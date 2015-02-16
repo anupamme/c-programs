@@ -38,10 +38,12 @@ typedef struct {
 void iterateLevelIArrayText(json_t* node, char* att, int depth){
 	int index;
 	json_t *sentiment, *wordDetails, *review;
+	printf("depth %d: \n", depth);
 	json_array_foreach(node, index, review){
 		if (depth == 1){
 			sentiment = json_object_get(review, "sentiment");
 			wordDetails = json_object_get(review, "worddetails");
+			printf("printing sentiment and word details: \n");
 			print_json(sentiment);
 			print_json(wordDetails);
 		}
@@ -54,7 +56,7 @@ void iterateLevelIArrayText(json_t* node, char* att, int depth){
 
 void processText(void *arg){
 	int webSize = 5, index, subindex;
-	char **tokens;
+	char *tokens[3];
 	int numTokens;
 	char *locationKey;
 	json_t *hotelDetails, *reviewArr, *review, *sentence, *wordDetails;
@@ -62,10 +64,10 @@ void processText(void *arg){
 	json_t *result = json_object();
 	json_error_t error;
 	smallSt *val = (smallSt *)arg;
-	printf("My name is %s and my text are: %s\n", val->name, val->text);
+	//printf("My name is %s and my text are: %s\n", val->name, val->text);
 	usleep(1000);
 	// process and write to file.
-	tokens = tokenize(val->text, '\t');
+	tokenize2(val->text, '\t', tokens);
 	numTokens = countTillNonNull(tokens);
 	locationKey = tokens[0];
 	hotelDetails = json_loads(tokens[1], 0, &error);
@@ -220,12 +222,12 @@ int main(int argc, char **argv){
 			return -1;
  		}
 		while ((read = getline(&line, &len, fp)) != -1) {
-           		printf("line text: %s :\n\n", line);
+           		//printf("line text: %s :\n\n", line);
 			data = (smallSt *)malloc((long long) 1 * sizeof(smallSt));
-			data->text = (char *)malloc(sizeof(line));
+			data->text = (char *)malloc(strlen(line) + 1);
 			data->name = (char *)malloc(sizeof(int));
 			strcpy(data->text, line);
-           		printf("line after text: %s :\n\n", data->text);
+           		//printf("line after text: %s :\n\n", data->text);
 			sprintf(data->name, "%d", globalCount++);
 			assert(threadpool_add(pool[0], &processText, data, 0) == 0);
        		}

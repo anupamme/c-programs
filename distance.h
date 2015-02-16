@@ -31,6 +31,8 @@ typedef struct {
 } model_data;*/
 char** tokenize(char*, const char);
 
+void tokenize2(char*, const char, char**);
+
 int countTillNonNull(char** arg);
 
 model_data* processModel(char *file_name);

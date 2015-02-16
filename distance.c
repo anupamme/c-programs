@@ -58,7 +58,7 @@ model_data* processModel(char *file_name){
    	fclose(f);
 	result->a = (int *)malloc(sizeof(int));
 	*result->a = a;
-	result->b = (int *)malloc(sizeof(int));
+	result->b =  (int *)malloc(sizeof(int));
 	*result->b = b;
 	result->len = (float *)malloc(sizeof(float));
 	*result->len = len;
@@ -71,9 +71,25 @@ int countTillNonNull(char** arg){
     return count - 1;
 }
 
+char *strstrtok(char *str, char *delim)
+{
+    static char *prev;
+    if (!str) str = prev;
+    if (str) {
+        char *end = strstr(str, delim);
+        if (end) {
+            prev = end + strlen(delim);
+            *end = 0;
+        } else {
+            prev = 0;
+        }
+    }
+    return str;
+}
+
 char** tokenize(char* word, const char ch){
-    char* result[5];
-    char* token = strtok(word, &ch);
+    char *result[5];
+    char *token = strtok(word, &ch);
     int count = 0;
     while (token) {
         result[count++] = token;
@@ -83,7 +99,7 @@ char** tokenize(char* word, const char ch){
     return result;
 }
 
-char** tokenize2(char* word, const char ch, char** result){
+void tokenize2(char* word, const char ch, char** result){
     char* token = strtok(word, &ch);
     int count = 0;
     while (token) {
@@ -91,7 +107,7 @@ char** tokenize2(char* word, const char ch, char** result){
         token = strtok(NULL, " ");
     }
     result[count] = NULL;
-    return result;
+    return;
 }
 
 int* findPositionInVocab(char *vocab, char *word, long long words){
